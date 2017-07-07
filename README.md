@@ -25,6 +25,8 @@ $ ./api_changes.py /path/to/acs-api-commands/diff-<old>-<new>/diff.json > ~/api-
 
 Now update the `cloudstack-docs-rn/source/api-changes.rst` file with the respective sections output into the `~/api-changes-partial.rst` file.
 
+This will product documentation like this: [ACS 4.9.0 Release Notes | API Changes](http://docs.cloudstack.apache.org/projects/cloudstack-release-notes/en/4.9.0/api-changes.html)
+
 
 `fixed_issues.py`
 -----------------
@@ -101,6 +103,7 @@ A lot happens in the running of this script, so make sure the formatting is corr
 
 Now update the `cloudstack-docs-rn/source/fixed_issues.rst` file with the respective sections output into the `~/fixed_issues_partial.rst` file.
 
+This will product documentation like this: [ACS 4.9.0 Release Notes | Fixed Issues](http://docs.cloudstack.apache.org/projects/cloudstack-release-notes/en/4.9.0/fixed_issues.html)
 
 
 DEPENDENCIES
