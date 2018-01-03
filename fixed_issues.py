@@ -67,6 +67,7 @@ import os.path
 import time
 
 import pprint
+import re
 import sys
 
 def load_config():
@@ -154,11 +155,20 @@ if __name__ == '__main__':
         if 'Revert "Merge pull request #' == commit_msg[0:28]:
             # eg: Revert "Merge pull request #1493 from shapeblue/nio-fix"
             pr_num = int(commit_msg[28:].split(' ')[0]) # get the text until the next space and cast to int
-            reverted.append(pr_num)
+            if pr_num not in reversed:
+                reverted.append(pr_num)
         if 'Merge pull request #' == commit_msg[0:20]:
             # eg: Merge pull request #1523 from nlivens/bug/CLOUDSTACK-9365
             pr_num = int(commit_msg[20:].split(' ')[0]) # get the text until the next space and cast to int
-            merged.append(pr_num)
+            if pr_num not in merged:
+                merged.append(pr_num)
+
+        # make sure we pick up the PR merges which are done through Github
+        regex = r"\(#(\d+)\)$"
+        matches = re.findall(regex, commit_msg)
+        for match in matches:
+            if match not in merged:
+                merged.append(int(match))
 
     # removed reverted PRs from the merged list
     merged = [pr for pr in merged if pr not in reverted]
