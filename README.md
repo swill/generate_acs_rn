@@ -109,6 +109,8 @@ This will product documentation like this: [ACS 4.9.0 Release Notes | Fixed Issu
 DEPENDENCIES
 ============
 
+python 2.7.11+
+
 `api_changes.py`
 ----------------
 
