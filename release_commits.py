@@ -220,7 +220,7 @@ if __name__ == '__main__':
         if 'Revert "Merge pull request #' == commit_msg[0:28]:
             # eg: Revert "Merge pull request #1493 from shapeblue/nio-fix"
             pr_num = int(commit_msg[28:].split(' ')[0]) # get the text until the next space and cast to int
-            if pr_num not in reversed:
+            if pr_num not in reverted:
                 reverted.append(pr_num)
         if 'Merge pull request #' == commit_msg[0:20]:
             # eg: Merge pull request #1523 from nlivens/bug/CLOUDSTACK-9365
@@ -329,5 +329,5 @@ if __name__ == '__main__':
 
     #print(md.draw()) # draw a markdown version of table as well
     file.close()
-    print("Commit data output to %s" % outputfile)
+    print("Commit data output to %s.txt" % outputfile)
     
