@@ -86,7 +86,7 @@ Sample json file contents:
 
 Example:
 
-     # python fixed_issues.py --config=config.json
+    python fixed_issues.py --config=config.json
 ```
 
 Don't worry too much about the shear number of usage options for `fixed_issues.py`.  There are sane defaults for the majority of the options, so there are only a few you need to care about.  While specifying a `--config` file is not required, I tend to use it to define the majority of the configuration which I have to specify values for.  I do this because it makes it easier for me to come back and pick up where I left off without having to figure out what configuration I was using in the past.
