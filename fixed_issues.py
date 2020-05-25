@@ -67,7 +67,9 @@ Sample json file contents:
     "--new_release_ver":"4.11.2.0"
 }
 
-Eaxmple usage: python2.7 fixed_issues.py --config=config.json
+Eaxmple:
+
+    python2.7 fixed_issues.py --config=config.json
 
 """
 
