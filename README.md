@@ -99,11 +99,11 @@ If the 'prev_release_commit' is defined, it overrides the 'prev_release_ver', ot
 ```json
 {
 	"--gh_token":"your_github_token from https://github.com/settings/tokens with `repo/public_repo` permissions",
-        "--prev_release_commit":"commit hash of the previous release, overrides \"prev_release_ver\" ",
+        "--prev_release_commit":"commit hash of the previous release, overrides prev_release_ver ",
         "--repo_name":"apache/cloudstack",
         "--branch":"we are querying this branch for the list of commits",
-        "--prev_release_ver":"tag linked to the commit hash of the previous release, overriden by \"prev_release_commit\" if defined",
-        "--new_release_ver":"Will be added as value in the version column in the output .rst file -i.e. \"4.14.0.0\""
+        "--prev_release_ver":"tag linked to the commit hash of the previous release, overriden by prev_release_commit if defined",
+        "--new_release_ver":"will be added as value in the version column in the output .rst file"
 }
 ```
 
@@ -117,9 +117,11 @@ For example, here is what was used for the 4.14 release - a custom commit hash w
         "--branch":"4.14",
         "--prev_release_ver":"4.13.0.0",
         "--new_release_ver":"4.14.0.0"
-}```
+}
+```
 
 Now run the `fixed_issues.py` script with that config.
+
 ```bash
 $ python fixed_issues.py --config=config.json
 ```
