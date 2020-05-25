@@ -93,7 +93,7 @@ Don't worry too much about the shear number of usage options for `fixed_issues.p
 
 Here are the key configuration items you need to care about.
 
-If the 'prev_release_commit' is defined, it overrides the 'prev_release_ver', otherwise the 'prev_release_commit' will be found out from the prev_release_ver (which is the git tag of the previous release). Keep in mind that if, for the previous release, the voted RC branch was not merged back to the main/master branch (by mistake), the commit ID of the git tag will be missing in the queried branch and you will have to manually find the correct last commit of the previous release.
+If the `prev_release_commit` is defined, it overrides the `prev_release_ver`, otherwise the `prev_release_commit` will be found out from the `prev_release_ver`. Keep in mind that if, for the previous release, the voted RC branch was not merged back to the main/master branch (by mistake), the voted commit will be missing in the queried branch and you will have to manually find the correct last/closest commit of the previous release.
 
 **`config.json`**
 ```json
@@ -107,7 +107,7 @@ If the 'prev_release_commit' is defined, it overrides the 'prev_release_ver', ot
 }
 ```
 
-For example, here is what was used for the 4.14 release - a custom commit hash was defined instead of the one that was voted, since the voted commit hash didn't exist in any branch as the RC branch was not merged back to the Master branch during 4.13 release (by mistake). 
+For example, here is what was used for the 4.14 release - i.e. a custom commit hash was defined instead of the one that was voted, since the voted commit hash didn't exist in any branch as the RC branch was not merged back to the Master branch during 4.13 release (by mistake). 
 
 ```json
 {
@@ -115,7 +115,7 @@ For example, here is what was used for the 4.14 release - a custom commit hash w
         "--prev_release_commit":"87c43501608a1df72a2f01ed17a522233e6617b0",
         "--repo_name":"apache/cloudstack",
         "--branch":"4.14",
-        "--prev_release_ver":"4.13.0.0",
+        "--prev_release_ver":"4.13.0.0 - doesn't matter, override by the prev_release_commit ",
         "--new_release_ver":"4.14.0.0"
 }
 ```
