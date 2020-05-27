@@ -137,6 +137,8 @@ This will product documentation like this: [ACS 4.14.0.0 Release Notes | Changes
 DEPENDENCIES
 ============
 
+python 2.7.11+
+
 `api_changes.py`
 ----------------
 
