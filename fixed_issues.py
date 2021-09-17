@@ -237,7 +237,7 @@ if __name__ == '__main__':
         for match in matches:
             if match not in merged:
                 merged.append(int(match))
-    
+        print("last merged item is: %s" % merged[-1])
     print("Removing reverted commits..")
     # removed reverted PRs from the merged list
     merged = [pr for pr in merged if pr not in reverted]
@@ -250,8 +250,6 @@ if __name__ == '__main__':
         table = TableRST([
             ('Version', branch_len),
             ('Github', gh_len),
-            ('Type', issue_type_len),
-            ('Priority', issue_priority_len),
             ('Description', desc_len),
         ])
     except IOError as e:
@@ -260,8 +258,6 @@ if __name__ == '__main__':
     md = TableMD([
         'new_release_ver',
         'Github',
-        'Type',
-        'Priority',
         'Description'
     ])
 
@@ -306,8 +302,6 @@ if __name__ == '__main__':
                 table.add_row([
                     new_release_ver,
                     '`#%s`_' % pr_num,
-                    issue_type,
-                    issue_priority,
                     desc
                 ])
             except IOError as e:
@@ -315,8 +309,6 @@ if __name__ == '__main__':
         md.add_row([
             new_release_ver,
             '[#%s](%s)' % (pr_num, gh_url),
-            issue_type,
-            issue_priority,
             desc
         ])
     if table:
