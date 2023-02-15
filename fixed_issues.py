@@ -322,7 +322,7 @@ if __name__ == '__main__':
     if table:
         file = open('%s.txt' % outputfile ,"w")
         file.write('\n.. cssclass:: table-striped table-bordered table-hover\n\n\n')
-        file.write(table.draw())
+        file.write(table.draw().decode("utf-8"))
     file.write('\n%s Issues listed\n\n' % len (merged) )
     
     # output the links we referenced earlier
