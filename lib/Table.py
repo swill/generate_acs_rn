@@ -15,6 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from six import string_types
+
 class TableRST(object):
     """
     Creates a new RST text based table.
@@ -31,7 +33,7 @@ class TableRST(object):
         self.table = """"""
         for c in cols:
             if len(c) == 2:
-                if isinstance(c[0], basestring) and isinstance(c[1], int):
+                if isinstance(c[0], string_types) and isinstance(c[1], int):
                     self.titles.append(c[0])
                     if len(c[0]) + 2 > c[1]:
                         self.widths.append(len(c[0]) + 2)

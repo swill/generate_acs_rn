@@ -23,7 +23,7 @@ Usage:
   api_changes.py (-h | --help)
 Options:
   -h --help                 Show this screen.
-  --col_name_width=<arg>    The width of the Name column [default: 45].
+  --col_name_width=<arg>    The width of the Name column [default: 60].
   --col_desc_width=<arg>    The width of the Description column [default: 80].
 """
 
