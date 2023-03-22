@@ -25,14 +25,10 @@ Usage:
                   [-b <arg> | --branch=<arg>]  
                   [--repo=<arg>] 
                   [--gh_base_url=<arg>] 
-                  [--jira_base_url=<arg>]
-                  [--jira_server_url=<arg>]
                   [--col_branch_width=<arg>] 
                   [--col_github_width=<arg>]
-                  [--col_jira_width=<arg>]
-                  [--col_type_width=<arg>] 
-                  [--col_priority_width=<arg>]
                   [--col_desc_width=<arg>]
+                  [--milestone=<arg>]
   fixed_issues.py (-h | --help)
 Options:
   -h --help                         Show this screen.
@@ -46,15 +42,10 @@ Options:
   --repo=<arg>                      The name of the repo to use [default: apache/cloudstack].
   --gh_base_url=<arg>               The base Github URL for pull requests 
                                       [default: https://github.com/apache/cloudstack/pull/].
-  --jira_base_url=<arg>             The base Jira URL for issues
-                                      [default: https://issues.apache.org/jira/browse/].
-  --jira_server_url=<arg>           The Jira server URL [default: https://issues.apache.org/jira].
   --col_branch_width=<arg>          The width of the Branches column [default: 25].
   --col_github_width=<arg>          The width of the Github PR column [default: 10].
-  --col_jira_width=<arg>            The width of the Jira Issue column [default: 20].
-  --col_type_width=<arg>            The width of the Issue Type column [default: 15].
-  --col_priority_width=<arg>        The width of the Issue Priority column [default: 10].
-  --col_desc_width=<arg>            The width of the Description column [default: 60].
+  --col_desc_width=<arg>            The width of the Description column [default: 45].
+  --milestone=<arg>                 The milestone for which to list fixes.
   
 Sample json file contents:
 
@@ -69,7 +60,7 @@ Sample json file contents:
 
 Eaxmple:
 
-    python2.7 fixed_issues.py --config=config.json
+    python3 fixed_issues.py --config=config.json
 
 """
 
@@ -122,6 +113,7 @@ def merge(primary, secondary):
 # run the code...
 if __name__ == '__main__':
     args = load_config()
+    print(f"args: {args}")
 #     repository details
     gh_token = args['--gh_token']
     repo_name = args['--repo']
@@ -129,66 +121,18 @@ if __name__ == '__main__':
     prev_release_commit = args['--prev_release_commit']
     new_release_ver = args['--new_release_ver']
     branch = args['--branch']
+    milestone = args['milestone']
 
     gh_base_url = args['--gh_base_url']
-    jira_base_url = args['--jira_base_url']
-    jira_server_url = args['--jira_server_url']
 
 #     table column widths
     branch_len = int(args['--col_branch_width'])
     gh_len = int(args['--col_github_width'])
-    jira_len = int(args['--col_jira_width'])
-    issue_type_len = int(args['--col_type_width'])
-    issue_priority_len = int(args['--col_priority_width'])
     desc_len = int(args['--col_desc_width'])
-    
+
     outputfile = str(os.path.splitext(args['--config'])[0])+".rst"
-##
-#     connect to jira and github
-##    jira = JIRA({
-##        'server': jira_server_url
-##    })
-##    gh = Github(gh_token)
-##
-#     get the repo and commits
-##    repo = gh.get_repo(repo_name)
-##    commits = repo.get_commits()
-##
-#     loop through the commits and pull relevant PR numbers
-##    merged = []
-##    reverted = []
-##    for c in commits:
-#         break when we hit the previous release commit
-##        if c.sha == prev_release_hash:
-##            break
-##
-#         get the first line of the commit message
-##        commit_msg = c.commit.message.splitlines()[0]
-##
-#         make sure the commit is a PR merge (using the `git pr ####` tool)
-##        if 'Revert "Merge pull request #' == commit_msg[0:28]:
-#             eg: Revert "Merge pull request #1493 from shapeblue/nio-fix"
-##            pr_num = int(commit_msg[28:].split(' ')[0]) # get the text until the next space and cast to int
-##            if pr_num not in reversed:
-##                reverted.append(pr_num)
-##        if 'Merge pull request #' == commit_msg[0:20]:
-#             eg: Merge pull request #1523 from nlivens/bug/CLOUDSTACK-9365
-##            pr_num = int(commit_msg[20:].split(' ')[0]) # get the text until the next space and cast to int
-##            if pr_num not in merged:
-##                merged.append(pr_num)
-##
-#         make sure we pick up the PR merges which are done through Github
-##        regex = r"\(#(\d+)\)$"
-##        matches = re.findall(regex, commit_msg)
-##        for match in matches:
-##            if match not in merged:
-##                merged.append(int(match))
-##
-#     removed reverted PRs from the merged list
-##    merged = [pr for pr in merged if pr not in reverted]
-        
-    
-    gh = Github(gh_token)
+
+    gh = Github(gh_token=gh_token)
     repo = gh.get_repo(repo_name)
     repo_tags = repo.get_tags()
     if prev_release_commit:
@@ -205,9 +149,11 @@ if __name__ == '__main__':
         print("No starting point found via version tag or commit SHA")
         exit
 
-    print("Retrieving commits from %s" % branch)        
+    print(f"milestone: {milestone}")
+    commits = {}
+    print(f"Retrieving commits from {branch}")
     commits = repo.get_commits(sha=(branch))
-    
+
     merged = []
     reverted = []
     for c in commits:
@@ -215,7 +161,7 @@ if __name__ == '__main__':
         if c.sha == prev_release_hash:
             break
 
-        print("Adding commit %s" % c.sha)
+        print(f"Adding commit {c.sha}")
         # get the first line of the commit message
         commit_msg = c.commit.message.splitlines()[0]
     
@@ -237,7 +183,6 @@ if __name__ == '__main__':
         for match in matches:
             if match not in merged:
                 merged.append(int(match))
-        print("last merged item is: %s" % merged[-1])
     print("Removing reverted commits..")
     # removed reverted PRs from the merged list
     merged = [pr for pr in merged if pr not in reverted]
@@ -265,37 +210,17 @@ if __name__ == '__main__':
     links = []
     for pr_num in merged:
         pr = repo.get_pull(pr_num)
+        # check the milestone
+        if milestone and (not pr.milestone or milestone != pr.milestone.number):
+            print(f'not using pr {pr_num} due to milestone mismatch')
+            merged.remove(pr_num)
+            continue
         # setup github pr url
         gh_url = '%s%s' % (gh_base_url, pr_num)
         links.append('.. _`#%s`: %s' % (pr_num, gh_url))
         # initialize the data using github pr data
         desc = pr.title.strip()
         branch = pr.base.ref
-        issue_type = ''
-        issue_priority = ''
-        jira_ticket = ''
-        jira_url = ''
-
-#        # check if there is a jira ticket associated
-#        jira_prefix = 'CLOUDSTACK-' # string to check for jira ticket
-#        jira_issue_index = pr.title.upper().find(jira_prefix)
-#        if jira_issue_index != -1: # has jira ticket
-#            # parse out the jira ticket int from the text
-#            jira_int = "".join(itertools.takewhile(str.isdigit, 
-#                (pr.title[jira_issue_index + len(jira_prefix):]).encode('ascii', 'ignore')))
-#            jira_ticket = '%s%s' % (jira_prefix, jira_int)
-#            try:
-#                # get the jira ticket from the api and override defaults
-#                issue = jira.issue(jira_ticket, expand="names")
-#                jira_url = '%s%s' % (jira_base_url, jira_ticket)
-#                links.append('.. _%s: %s' % (jira_ticket, jira_url))
-#                issue_type = issue.fields.issuetype.name
-#                issue_priority = issue.fields.priority.name
-#                desc = issue.fields.summary.strip()
-#            except:
-#                continue # move on if there is an issue getting the ticket
-#
-#        # add the branch details
 
         if table:
             try:
